@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACA - Simulatore tabelle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='aca_table_trainer_style.css') }}?v=simulator-only-20260630a">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="trainer-container">
+        <header class="trainer-header">
+            <div class="trainer-kicker">Advanced Computer Architectures</div>
+            <h1>Simulatore tabelle</h1>
+            <p>Genera una traccia Scoreboard, Tomasulo o Tomasulo + ROB, compila i cicli e controlla gli errori.</p>
+        </header>
+
+        <main class="trainer-layout">
+            <aside class="trainer-side">
+                <section class="trainer-panel">
+                    <h2>Genera</h2>
+                    <label for="aca-type-select">Tipologia</label>
+                    <select id="aca-type-select">
+                        <option value="mixed">Mista</option>
+                        <option value="scoreboard">Scoreboard</option>
+                        <option value="tomasulo">Tomasulo</option>
+                        <option value="rob">Tomasulo + ROB</option>
+                    </select>
+                    <button type="button" id="aca-generate-btn" class="primary-action">
+                        <i class="fas fa-shuffle"></i> Genera esercizio
+                    </button>
+                </section>
+
+                <section class="trainer-panel">
+                    <h2>Punteggio</h2>
+                    <div class="score-box">
+                        <strong id="aca-score-value">0 / 0</strong>
+                        <span>celle corrette</span>
+                    </div>
+                    <button type="button" id="aca-reset-score-btn">
+                        <i class="fas fa-rotate-left"></i> Reset punteggio
+                    </button>
+                </section>
+
+                <section class="trainer-panel">
+                    <h2>Codice</h2>
+                    <div class="code-row">
+                        <input id="aca-code-input" type="text" placeholder="ACA-SB-E2" autocomplete="off">
+                        <button type="button" id="aca-code-btn">Apri</button>
+                    </div>
+                    <p id="aca-code-feedback" class="inline-feedback"></p>
+                </section>
+
+                <section class="trainer-panel">
+                    <h2>Archivio</h2>
+                    <div class="archive-list" id="aca-archive-list"></div>
+                </section>
+
+                <section class="trainer-panel">
+                    <h2>Esercizi lezione</h2>
+                    <div class="lesson-group">
+                        <h3>Scoreboard</h3>
+                        <div class="lesson-links">
+                            <button type="button" class="lesson-open" data-family="scoreboard" data-key="ex1">1</button>
+                            <button type="button" class="lesson-open" data-family="scoreboard" data-key="ex2">2</button>
+                            <button type="button" class="lesson-open" data-family="scoreboard" data-key="ex3">3</button>
+                            <button type="button" class="lesson-open" data-family="scoreboard" data-key="ex3a">3a</button>
+                            <button type="button" class="lesson-open" data-family="scoreboard" data-key="ex4">4</button>
+                        </div>
+                    </div>
+                    <div class="lesson-group">
+                        <h3>Tomasulo</h3>
+                        <div class="lesson-links">
+                            <button type="button" class="lesson-open" data-family="tomasulo" data-key="ex1">1</button>
+                            <button type="button" class="lesson-open" data-family="tomasulo" data-key="ex2">2</button>
+                            <button type="button" class="lesson-open" data-family="tomasulo" data-key="ex3">3</button>
+                        </div>
+                    </div>
+                    <div class="lesson-group">
+                        <h3>Tomasulo + ROB</h3>
+                        <div class="lesson-links">
+                            <button type="button" class="lesson-open" data-family="rob" data-key="ex1">1</button>
+                            <button type="button" class="lesson-open" data-family="rob" data-key="ex2">2</button>
+                            <button type="button" class="lesson-open" data-family="rob" data-key="ex3">3</button>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="trainer-main">
+                <div id="aca-table-workspace">
+                    <div class="exercise-head">
+                        <div>
+                            <div class="exercise-topic" id="aca-topic"></div>
+                            <h2 id="aca-title"></h2>
+                        </div>
+                        <span id="aca-code-chip" class="code-chip"></span>
+                    </div>
+
+                    <div class="exercise-grid">
+                        <article class="info-strip">
+                            <h3>Traccia</h3>
+                            <p id="aca-context"></p>
+                        </article>
+                        <article class="info-strip">
+                            <h3>Regole</h3>
+                            <p id="aca-rules"></p>
+                        </article>
+                        <article class="info-strip wide code-strip">
+                            <h3>Codice</h3>
+                            <pre id="aca-code-listing"></pre>
+                        </article>
+                        <article class="info-strip wide">
+                            <h3>Compila</h3>
+                            <p id="aca-prompt"></p>
+                        </article>
+                    </div>
+
+                    <div class="table-toolbar">
+                        <button type="button" id="aca-check-btn" class="primary-action">
+                            <i class="fas fa-check"></i> Controlla
+                        </button>
+                        <button type="button" id="aca-solution-btn">
+                            <i class="fas fa-table"></i> Soluzione
+                        </button>
+                        <button type="button" id="aca-clear-btn">
+                            <i class="fas fa-eraser"></i> Pulisci
+                        </button>
+                        <button type="button" id="aca-next-btn">
+                            <i class="fas fa-forward-step"></i> Nuovo
+                        </button>
+                    </div>
+
+                    <div class="table-wrap" id="aca-table-wrap"></div>
+
+                    <section class="feedback-panel" id="aca-feedback-panel" hidden>
+                        <h3 id="aca-feedback-title">Correzione</h3>
+                        <div id="aca-feedback-body"></div>
+                    </section>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='scoreboard_exercises_script.js') }}?v=simulator-only-20260630a"></script>
+    <script src="{{ url_for('static', filename='tomasulo_exercises_script.js') }}?v=simulator-only-20260630a"></script>
+    <script src="{{ url_for('static', filename='reorder_exercises_script.js') }}?v=simulator-only-20260630a"></script>
+    <script src="{{ url_for('static', filename='aca_table_trainer_script.js') }}?v=simulator-only-20260630a"></script>
+</body>
+
+</html>

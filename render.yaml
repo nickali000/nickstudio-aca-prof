@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: aca-table-trainer-simulator
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    envVars:
+      - key: NICKSTUDIO_WORKERS
+        value: "1"
