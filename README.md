@@ -12,7 +12,7 @@ NICKSTUDIO_PORT=8085 python app.py
 Open:
 
 ```text
-http://127.0.0.1:8085/advanced-computer-architectures/exercises/table-trainer
+http://127.0.0.1:8085/
 ```
 
 ## Render

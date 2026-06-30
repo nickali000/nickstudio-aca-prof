@@ -1,16 +1,12 @@
 import os
 
-from flask import Flask, jsonify, redirect, render_template, url_for
+from flask import Flask, jsonify, render_template
 
 
 app = Flask(__name__)
 
 
 @app.route("/")
-def index():
-    return redirect(url_for("table_trainer"))
-
-
 @app.route("/advanced-computer-architectures/exercises/table-trainer")
 def table_trainer():
     return render_template("aca_table_trainer.html")
